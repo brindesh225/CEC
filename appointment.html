@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Booking - MediAssist</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="logo">MediAssist</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="registration.html">Registration</a>
+            <a href="appointment.html" class="active">Appointment</a>
+            <a href="symptoms.html">Symptoms</a>
+        </div>
+        <button id="themeToggle" class="theme-btn">🌙</button>
+    </nav>
+
+    <!-- PAGE TITLE -->
+    <header class="hero">
+        <h1>Appointment Booking</h1>
+        <p>Book an appointment or generate a token.</p>
+    </header>
+
+    <!-- FORM -->
+    <div class="form-container">
+        <h2>Book Appointment</h2>
+        <form id="appointmentForm">
+            <input type="text" id="patientName" placeholder="Patient Name" required>
+            <input type="number" id="patientAge" placeholder="Age" required>
+
+            <select id="doctorSelect" required>
+                <option value="" disabled selected>Select Doctor</option>
+                <option value="Dr. Sunil Sharma">Dr. Sunil Sharma - General Physician</option>
+                <option value="Dr. Neha Rao">Dr. Neha Rao - Dermatologist</option>
+                <option value="Dr. Ajay Kumar">Dr. Ajay Kumar - Cardiologist</option>
+                <option value="Dr. Meera Das">Dr. Meera Das - Pediatrician</option>
+            </select>
+
+            <select id="timeSelect" required>
+                <option value="">Select Time</option>
+            </select>
+
+            <input type="date" id="dateSelect" required>
+
+            <button type="submit" class="btn">Generate Token</button>
+        </form>
+    </div>
+
+    <!-- TOKEN BOX -->
+    <div id="tokenBox" style="display:none; max-width:500px; padding:20px; margin:20px auto; background:white; border-radius:10px; box-shadow:0 0 15px rgba(0,0,0,0.1);">
+        <h2>Your Token</h2>
+        <p id="tokenDetails"></p>
+        <button id="cancelBtn" class="btn" style="background:red;">Cancel Appointment</button>
+        <button id="rescheduleBtn" class="btn">Reschedule</button>
+    </div>
+
+    <!-- VISIT HISTORY -->
+    <div id="historyBox" style="max-width:600px; padding:20px; margin:25px auto; background:white; border-radius:10px; box-shadow:0 0 15px rgba(0,0,0,0.1); display:none;">
+        <h2>Visit History</h2>
+        <div id="historyList"></div>
+    </div>
+
+    <script>
+        const doctorSchedule = {
+            "Dr. Sunil Sharma": ["10:00 AM", "11:00 AM", "2:00 PM"],
+            "Dr. Neha Rao": ["9:00 AM", "1:00 PM", "3:00 PM"],
+            "Dr. Ajay Kumar": ["12:00 PM", "4:00 PM"],
+            "Dr. Meera Das": ["10:30 AM", "1:30 PM", "3:30 PM"]
+        };
+
+        const doctorSelect = document.getElementById("doctorSelect");
+        const timeSelect = document.getElementById("timeSelect");
+        const appointmentForm = document.getElementById("appointmentForm");
+        const tokenBox = document.getElementById("tokenBox");
+        const tokenDetails = document.getElementById("tokenDetails");
+        const historyBox = document.getElementById("historyBox");
+        const historyList = document.getElementById("historyList");
+        const cancelBtn = document.getElementById("cancelBtn");
+        const rescheduleBtn = document.getElementById("rescheduleBtn");
+
+        let currentAppointment = null;
+
+        // Fill available times when doctor is selected
+        doctorSelect.addEventListener("change", () => {
+            const doctor = doctorSelect.value;
+            timeSelect.innerHTML = `<option value="">Select Time</option>`;
+            if (doctorSchedule[doctor]) {
+                doctorSchedule[doctor].forEach(time => {
+                    const opt = document.createElement("option");
+                    opt.value = time;
+                    opt.textContent = time;
+                    timeSelect.appendChild(opt);
+                });
+            }
+        });
+
+        // Submit appointment
+        appointmentForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const name = document.getElementById("patientName").value;
+            const age = document.getElementById("patientAge").value;
+            const doctor = doctorSelect.value;
+            const date = document.getElementById("dateSelect").value;
+            const time = timeSelect.value;
+
+            if (!doctor || !time) {
+                alert("Please select a doctor and time slot.");
+                return;
+            }
+
+            const tokenNumber = Math.floor(Math.random() * 9000) + 1000;
+
+            tokenDetails.innerHTML = `
+                <strong>Token No:</strong> ${tokenNumber}<br>
+                <strong>Patient:</strong> ${name} (Age ${age})<br>
+                <strong>Doctor:</strong> ${doctor}<br>
+                <strong>Date:</strong> ${date}<br>
+                <strong>Time:</strong> ${time}
+            `;
+
+            tokenBox.style.display = "block";
+
+            // Save to localStorage as visit history
+            const history = JSON.parse(localStorage.getItem("visitHistory") || "[]");
+            currentAppointment = { name, age, doctor, date, time, tokenNumber };
+            history.push(currentAppointment);
+            localStorage.setItem("visitHistory", JSON.stringify(history));
+            renderHistory();
+        });
+
+        function renderHistory() {
+            const history = JSON.parse(localStorage.getItem("visitHistory") || "[]");
+            if (history.length === 0) {
+                historyBox.style.display = "none";
+                return;
+            }
+            historyBox.style.display = "block";
+            historyList.innerHTML = "";
+            history.forEach((h, index) => {
+                const div = document.createElement("div");
+                div.className = "result-item";
+                div.innerHTML = `
+                    <strong>${h.name}</strong> with <strong>${h.doctor}</strong> on <strong>${h.date}</strong> at <strong>${h.time}</strong> (Token ${h.tokenNumber})
+                `;
+                historyList.appendChild(div);
+            });
+        }
+
+        // Cancel appointment
+        cancelBtn.addEventListener("click", () => {
+            if (!currentAppointment) return;
+            let history = JSON.parse(localStorage.getItem("visitHistory") || "[]");
+            history = history.filter(h => h.tokenNumber !== currentAppointment.tokenNumber);
+            localStorage.setItem("visitHistory", JSON.stringify(history));
+            currentAppointment = null;
+            tokenBox.style.display = "none";
+            renderHistory();
+            alert("Appointment cancelled successfully!");
+        });
+
+        // Reschedule appointment
+        rescheduleBtn.addEventListener("click", () => {
+            if (!currentAppointment) return;
+            const newDate = prompt("Enter new date (YYYY-MM-DD):", currentAppointment.date);
+            const newTime = prompt("Enter new time:", currentAppointment.time);
+            if (newDate && newTime) {
+                let history = JSON.parse(localStorage.getItem("visitHistory") || "[]");
+                history = history.map(h => {
+                    if (h.tokenNumber === currentAppointment.tokenNumber) {
+                        h.date = newDate;
+                        h.time = newTime;
+                    }
+                    return h;
+                });
+                currentAppointment.date = newDate;
+                currentAppointment.time = newTime;
+                localStorage.setItem("visitHistory", JSON.stringify(history));
+                tokenDetails.innerHTML = `
+                    <strong>Token No:</strong> ${currentAppointment.tokenNumber}<br>
+                    <strong>Patient:</strong> ${currentAppointment.name} (Age ${currentAppointment.age})<br>
+                    <strong>Doctor:</strong> ${currentAppointment.doctor}<br>
+                    <strong>Date:</strong> ${currentAppointment.date}<br>
+                    <strong>Time:</strong> ${currentAppointment.time}
+                `;
+                renderHistory();
+                alert("Appointment rescheduled successfully!");
+            }
+        });
+
+        // Initial render
+        renderHistory();
+    </script>
+
+    <script src="script.js"></script>
+</body>
+</html>

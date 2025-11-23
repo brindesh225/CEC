@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symptoms Checker - MediAssist</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="logo">MediAssist</div>
+
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="registration.html">Registration</a>
+            <a href="appointment.html">Appointment</a>
+            <a href="symptoms.html" class="active">Symptoms Checker</a>
+        </div>
+
+        <button id="themeToggle" class="theme-btn">🌙</button>
+    </nav>
+
+    <!-- PAGE TITLE -->
+    <header class="hero">
+        <h1>Symptoms Checker</h1>
+        <p>Type what you're feeling and get a quick health prediction.</p>
+    </header>
+
+    <!-- FORM CONTAINER -->
+    <div class="form-container">
+        <h2>Enter Your Symptoms</h2>
+
+        <form id="symptomsForm">
+            <textarea id="symptomsInput" rows="5" placeholder="Example: headache, fever, cough..." required></textarea>
+            <button type="submit" class="btn">Analyze</button>
+        </form>
+    </div>
+
+    <!-- RESULTS -->
+    <div id="resultsBox"></div>
+
+    <script src="script.js"></script>  
+</body>
+</html>

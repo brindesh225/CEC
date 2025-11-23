@@ -1,0 +1,108 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    font-family: "Poppins", sans-serif;
+}
+
+/* Background Image */
+.background {
+    background: url('pic.jpg') no-repeat center center/cover;
+    filter: blur(6px);
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: -2;
+}
+
+/* Dark overlay */
+.overlay {
+    background: rgba(0, 0, 0, 0.45);
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: -1;
+}
+
+/* Center Form */
+.login-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Logo */
+.logo {
+    width: 110px;
+    margin-bottom: 10px;
+    animation: fadeIn 1.2s ease-in-out;
+}
+
+/* Login Card */
+.login-form {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    width: 330px;
+    border-radius: 15px;
+    box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    animation: slideUp 0.8s ease forwards;
+}
+
+.login-form h2 {
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 24px;
+}
+
+.login-form input {
+    width: 100%;
+    padding: 12px;
+    margin: 12px 0;
+    border-radius: 10px;
+    border: 1px solid #aaa;
+    font-size: 16px;
+}
+
+.login-form button {
+    width: 100%;
+    padding: 12px;
+    background: #4CAF50;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 18px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.login-form button:hover {
+    background: #3e8e41;
+}
+
+.signup-link {
+    margin-top: 15px;
+}
+
+.signup-link a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+/* Animations */
+@keyframes slideUp {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}

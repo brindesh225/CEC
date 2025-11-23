@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Registration - MediAssist</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">MediAssist</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="registration.html" class="active">Registration</a>
+            <a href="appointment.html">Appointment</a>
+            <a href="symptoms.html">Symptoms Checker</a>
+        </div>
+        <button id="themeToggle" class="theme-btn">🌙</button>
+    </nav>
+
+    <div class="form-container">
+        <h2>Patient Registration</h2>
+
+        <form id="registrationForm">
+            <input type="text" placeholder="Full Name" required>
+            <input type="number" placeholder="Age" required>
+            <input type="text" placeholder="Phone Number" required>
+            <input type="text" placeholder="Address" required>
+            <button type="submit" class="btn">Submit</button>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
